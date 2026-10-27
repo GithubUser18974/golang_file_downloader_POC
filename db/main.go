@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite"
 )
 
 // sql quesry for creating tabel
@@ -14,13 +14,13 @@ CREATE TABLE IF NOT EXISTS users (
 id INTEGER PRIMARY KEY AUTOINCREMENT,
 name TEXT NOT NULL,
 email TEXT NOT NULL UNIQUE,
-hashed password BLOB NOT NULL, Storing as BLOB for byte slice
+hashed_password BLOB NOT NULL, -- Storing as BLOB for byte slice
 created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 )`
 
 func main() {
 	db_name := "users.db"
-	db, err := sql.Open("sqlite3", db_name)
+	db, err := sql.Open("sqlite", db_name)
 	if err != nil {
 		log.Fatal("failed to open database", err)
 	}
