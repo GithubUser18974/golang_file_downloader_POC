@@ -14,12 +14,12 @@ CREATE TABLE IF NOT EXISTS users (
 id INTEGER PRIMARY KEY AUTOINCREMENT,
 name TEXT NOT NULL,
 email TEXT NOT NULL UNIQUE,
-hashed_password BLOB NOT NULL, -- Storing as BLOB for byte slice
+hashed_password TEXT NOT NULL, -- Storing as BLOB for byte slice
 created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 )`
 
 func main() {
-	db_name := "users.db"
+	db_name := "usersDB.db"
 	db, err := sql.Open("sqlite", db_name)
 	if err != nil {
 		log.Fatal("failed to open database", err)
@@ -37,4 +37,18 @@ func main() {
 		log.Fatal("failed to execute schema query", err)
 	}
 
+}
+
+func createUser(db *sql.DB, name, email, hashpassword string) {
+	stmnt := `INSERT INTO users (name, email, hashed_password) VALUES (?,?,?);`
+
+	result, err := db.Exec(stmnt, name, email, hashpassword)
+	if err != nil {
+		log.Fatal("failed to create user", err)
+	}
+	id, err := result.LastInsertId()
+	if err != nil {
+		log.Fatal("failed to get last insert id", err)
+	}
+	fmt.Println("user created with id", id)
 }
