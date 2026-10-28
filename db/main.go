@@ -61,3 +61,14 @@ func createUser(db *sql.DB, name, email, hashpassword string) {
 	}
 	fmt.Println("user created with id", id)
 }
+
+func getUserByEmail(db *sql.DB, email string) (*User, error) {
+	stmnt := `SELECT id, name, email, hashed_password, created_at FROM users WHERE email = ?;`
+	row := db.QueryRow(stmnt, email)
+	var user User
+	err := row.Scan(&user.ID, &user.Name, &user.Email, &user.HashedPassword, &user.CreatedAt)
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
