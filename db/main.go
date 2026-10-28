@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"time"
 
 	_ "modernc.org/sqlite"
 )
@@ -17,6 +18,14 @@ email TEXT NOT NULL UNIQUE,
 hashed_password TEXT NOT NULL, -- Storing as BLOB for byte slice
 created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 )`
+
+type User struct {
+	ID             int64     `json:"id"`
+	Name           string    `json:"name"`
+	Email          string    `json:"email"`
+	HashedPassword []byte    `json:"hashed_password"`
+	CreatedAt      time.Time `json:"created_at"`
+}
 
 func main() {
 	db_name := "usersDB.db"
