@@ -72,3 +72,22 @@ func getUserByEmail(db *sql.DB, email string) (*User, error) {
 	}
 	return &user, nil
 }
+
+func getAllUsers(db *sql.DB) ([]User, error) {
+	stmnt := `SELECT id, name, email, hashed_password, created_at FROM users;`
+	rows, err := db.Query(stmnt)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var users []User
+	for rows.Next() {
+		var user User
+		err := rows.Scan(&user.ID, &user.Name, &user.Email, &user.HashedPassword, &user.CreatedAt)
+		if err != nil {
+			return nil, err
+		}
+		users = append(users, user)
+	}
+	return users, nil
+}
